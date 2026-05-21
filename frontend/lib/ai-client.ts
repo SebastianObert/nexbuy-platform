@@ -1,4 +1,5 @@
-const AI_BASE_URL = process.env.NEXT_PUBLIC_AI_URL ?? "http://localhost:8000"
+const AI_BASE_URL      = process.env.NEXT_PUBLIC_AI_URL       ?? "http://localhost:8000"
+const ANOMALY_BASE_URL = process.env.NEXT_PUBLIC_ANOMALY_URL  ?? "http://localhost:8001"
 
 export interface MOQInput {
   goal_usd: number
@@ -55,4 +56,40 @@ export async function predictSuccess(input: SuccessInput): Promise<SuccessOutput
   })
   if (!res.ok) throw new Error(`AI Engine error: ${res.status}`)
   return res.json() as Promise<SuccessOutput>
+}
+
+// ── Anomaly Detection (port 8001) ─────────────────────────────────────────────
+
+export interface AnomalyInput {
+  user_id: string
+  events_per_hour: number
+  avg_inter_sec: number
+  std_inter_sec: number
+  min_inter_sec: number
+  n_sessions: number
+  events_per_session: number
+  cart_ratio: number
+  purchase_ratio: number
+  n_types: number
+  night_ratio: number
+  unique_products: number
+}
+
+export interface AnomalyResult {
+  user_id: string
+  trust_score: number
+  is_anomaly: boolean
+  risk_flag: boolean
+  risk_level: "LOW" | "MEDIUM" | "HIGH"
+  message: string
+}
+
+export async function detectAnomaly(input: AnomalyInput): Promise<AnomalyResult> {
+  const res = await fetch(`${ANOMALY_BASE_URL}/detect`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  })
+  if (!res.ok) throw new Error(`Anomaly Service error: ${res.status}`)
+  return res.json() as Promise<AnomalyResult>
 }

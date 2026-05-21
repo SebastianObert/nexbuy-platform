@@ -1,6 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
+import { detectAnomaly, type AnomalyResult } from "@/lib/ai-client"
 
 const METRICS = [
   { label: "GROUP BUY AKTIF",          value: "42",   delta: "+4%",  color: "text-primary",       bar: "bg-primary w-2/3",        glow: "shadow-[0_0_8px_#adc6ff]" },
@@ -39,7 +41,63 @@ const ALERTS = [
   },
 ]
 
+const RISK_CONFIG = {
+  LOW:    { color: "text-success-green", bg: "bg-success-green/10", border: "border-success-green/30", icon: "verified",  label: "AMAN" },
+  MEDIUM: { color: "text-warning",       bg: "bg-warning/10",        border: "border-warning/30",       icon: "warning",   label: "PERLU PANTAU" },
+  HIGH:   { color: "text-error",         bg: "bg-error/10",          border: "border-error/30",         icon: "dangerous", label: "MENCURIGAKAN" },
+}
+
+const DEFAULT_FORM = {
+  user_id: "user_demo",
+  events_per_hour: "250",
+  avg_inter_sec: "2.5",
+  std_inter_sec: "0.8",
+  min_inter_sec: "0.3",
+  n_sessions: "1",
+  events_per_session: "150",
+  cart_ratio: "0.02",
+  purchase_ratio: "0.01",
+  n_types: "1",
+  night_ratio: "0.9",
+  unique_products: "2",
+}
+
 export default function AdminDashboardPage() {
+  const [anomalyForm,   setAnomalyForm]   = useState(DEFAULT_FORM)
+  const [anomalyResult, setAnomalyResult] = useState<AnomalyResult | null>(null)
+  const [loading,       setLoading]       = useState(false)
+  const [error,         setError]         = useState<string | null>(null)
+
+  const handleScan = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    setAnomalyResult(null)
+    try {
+      const result = await detectAnomaly({
+        user_id:            anomalyForm.user_id,
+        events_per_hour:    parseFloat(anomalyForm.events_per_hour),
+        avg_inter_sec:      parseFloat(anomalyForm.avg_inter_sec),
+        std_inter_sec:      parseFloat(anomalyForm.std_inter_sec),
+        min_inter_sec:      parseFloat(anomalyForm.min_inter_sec),
+        n_sessions:         parseInt(anomalyForm.n_sessions),
+        events_per_session: parseFloat(anomalyForm.events_per_session),
+        cart_ratio:         parseFloat(anomalyForm.cart_ratio),
+        purchase_ratio:     parseFloat(anomalyForm.purchase_ratio),
+        n_types:            parseInt(anomalyForm.n_types),
+        night_ratio:        parseFloat(anomalyForm.night_ratio),
+        unique_products:    parseInt(anomalyForm.unique_products),
+      })
+      setAnomalyResult(result)
+    } catch {
+      setError("Anomaly Service tidak tersedia. Pastikan server berjalan di localhost:8001.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const risk = anomalyResult ? RISK_CONFIG[anomalyResult.risk_level] : null
+
   return (
     <div className="bg-background text-on-surface font-body-md selection:bg-primary selection:text-on-primary min-h-screen flex flex-col">
       {/* ── Navbar ─────────────────────────────────────────────── */}
@@ -193,6 +251,149 @@ export default function AdminDashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* ── AI Anomaly Detection Widget ────────────────────────── */}
+        <section className="mb-section-gap">
+          <div className="flex items-center gap-stack-md mb-stack-lg">
+            <div className="w-10 h-10 bg-error/10 border border-error/30 flex items-center justify-center">
+              <span className="material-symbols-outlined text-error">security</span>
+            </div>
+            <div>
+              <h2 className="font-headline-sm text-headline-sm text-on-surface uppercase">AI Anomaly Detection</h2>
+              <p className="font-label-mono text-label-mono text-error">ISOLATION FOREST — TRUST SCORE ENGINE</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+            {/* Form */}
+            <div className="glass-panel rounded-lg p-stack-lg">
+              <p className="font-label-mono text-label-mono text-on-surface-variant uppercase mb-stack-md">Input Perilaku User</p>
+              <form onSubmit={handleScan} className="grid grid-cols-2 gap-stack-sm">
+                {/* User ID */}
+                <div className="col-span-2 flex flex-col gap-1">
+                  <label className="font-label-mono text-[10px] text-on-surface-variant uppercase">User ID</label>
+                  <input value={anomalyForm.user_id} onChange={e => setAnomalyForm(f => ({...f, user_id: e.target.value}))}
+                    className="w-full bg-deep-void border border-surface-stroke px-3 py-2 text-on-surface font-body-md focus:outline-none focus:border-error transition-colors text-sm" />
+                </div>
+
+                {[
+                  ["events_per_hour",    "Events/Jam",         "250"],
+                  ["avg_inter_sec",      "Avg Jeda (detik)",   "2.5"],
+                  ["std_inter_sec",      "Std Jeda (detik)",   "0.8"],
+                  ["min_inter_sec",      "Min Jeda (detik)",   "0.3"],
+                  ["n_sessions",         "Jumlah Sesi",        "1"],
+                  ["events_per_session", "Events/Sesi",        "150"],
+                  ["cart_ratio",         "Rasio Cart (0-1)",   "0.02"],
+                  ["purchase_ratio",     "Rasio Beli (0-1)",   "0.01"],
+                  ["n_types",            "Tipe Event",         "1"],
+                  ["night_ratio",        "Rasio Malam (0-1)",  "0.9"],
+                  ["unique_products",    "Produk Unik",        "2"],
+                ].map(([key, lbl, ph]) => (
+                  <div key={key} className="flex flex-col gap-1">
+                    <label className="font-label-mono text-[10px] text-on-surface-variant uppercase">{lbl}</label>
+                    <input
+                      type="number" step="any" placeholder={ph}
+                      value={anomalyForm[key as keyof typeof anomalyForm]}
+                      onChange={e => setAnomalyForm(f => ({...f, [key]: e.target.value}))}
+                      className="w-full bg-deep-void border border-surface-stroke px-3 py-2 text-on-surface font-body-md focus:outline-none focus:border-error transition-colors text-sm"
+                    />
+                  </div>
+                ))}
+
+                <div className="col-span-2 mt-2">
+                  <button type="submit" disabled={loading}
+                    className="w-full bg-error/20 border border-error/40 text-error font-headline-sm text-headline-sm py-3 hover:bg-error hover:text-on-error transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+                    {loading
+                      ? <><span className="material-symbols-outlined animate-spin">autorenew</span>SCANNING...</>
+                      : <><span className="material-symbols-outlined">radar</span>SCAN ANOMALI</>
+                    }
+                  </button>
+                </div>
+              </form>
+
+              {error && (
+                <div className="mt-stack-md p-stack-md bg-error-container/20 border border-error/30 rounded flex items-start gap-3">
+                  <span className="material-symbols-outlined text-error">warning</span>
+                  <p className="font-body-md text-body-md text-error text-sm">{error}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Result */}
+            <div className="glass-panel rounded-lg p-stack-lg flex flex-col gap-stack-md">
+              <p className="font-label-mono text-label-mono text-on-surface-variant uppercase">Hasil Analisis</p>
+
+              {!anomalyResult && !error && (
+                <div className="flex-1 flex flex-col items-center justify-center gap-3 py-8 text-center">
+                  <span className="material-symbols-outlined text-5xl text-surface-stroke">radar</span>
+                  <p className="font-body-md text-body-md text-on-surface-variant">Isi form dan klik Scan Anomali untuk analisis</p>
+                </div>
+              )}
+
+              {anomalyResult && risk && (
+                <>
+                  {/* Trust Score */}
+                  <div className={`p-stack-md rounded-lg border ${risk.border} ${risk.bg}`}>
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="font-label-mono text-label-mono text-on-surface-variant uppercase">Trust Score</span>
+                      <span className={`font-label-mono text-[10px] px-2 py-1 rounded uppercase ${risk.bg} ${risk.color} border ${risk.border}`}>
+                        {risk.label}
+                      </span>
+                    </div>
+                    <div className="flex items-end gap-2 mb-3">
+                      <span className={`font-display-lg text-headline-md ${risk.color}`}>
+                        {anomalyResult.trust_score.toFixed(1)}
+                      </span>
+                      <span className="font-label-mono text-label-mono text-on-surface-variant mb-1">/ 100</span>
+                    </div>
+                    <div className="h-3 w-full bg-surface-stroke rounded-full overflow-hidden">
+                      <div className="h-full rounded-full transition-all duration-700"
+                        style={{
+                          width: `${anomalyResult.trust_score}%`,
+                          background: anomalyResult.trust_score >= 60 ? "#10B981"
+                            : anomalyResult.trust_score >= 40 ? "#F59E0B" : "#ffb4ab"
+                        }}
+                      />
+                    </div>
+                    <p className="font-label-mono text-[10px] text-on-surface-variant mt-2">
+                      Threshold: &lt;40 = di-exclude dari pipeline AI
+                    </p>
+                  </div>
+
+                  {/* Detail flags */}
+                  <div className="grid grid-cols-2 gap-stack-sm">
+                    <div className="bg-deep-void border border-surface-stroke p-3 rounded text-center">
+                      <p className="font-label-mono text-[10px] text-on-surface-variant uppercase mb-1">Status</p>
+                      <p className={`font-label-mono text-label-mono ${anomalyResult.is_anomaly ? "text-error" : "text-success-green"}`}>
+                        {anomalyResult.is_anomaly ? "ANOMALI" : "NORMAL"}
+                      </p>
+                    </div>
+                    <div className="bg-deep-void border border-surface-stroke p-3 rounded text-center">
+                      <p className="font-label-mono text-[10px] text-on-surface-variant uppercase mb-1">Pipeline AI</p>
+                      <p className={`font-label-mono text-label-mono ${anomalyResult.risk_flag ? "text-error" : "text-success-green"}`}>
+                        {anomalyResult.risk_flag ? "EXCLUDED" : "INCLUDED"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div className="bg-surface-container p-stack-md rounded flex items-start gap-3">
+                    <span className={`material-symbols-outlined fill-icon ${risk.color}`}>{risk.icon}</span>
+                    <p className="font-body-md text-body-md text-on-surface-variant text-sm leading-relaxed">
+                      {anomalyResult.message}
+                    </p>
+                  </div>
+
+                  {/* User ID */}
+                  <div className="flex justify-between items-center pt-2 border-t border-surface-stroke">
+                    <span className="font-label-mono text-[10px] text-on-surface-variant uppercase">User</span>
+                    <span className="font-label-mono text-label-mono text-primary">{anomalyResult.user_id}</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
 
         {/* ── Admin Flow Steps ───────────────────────────────────── */}
         <section className="py-section-gap border-t border-surface-stroke">
