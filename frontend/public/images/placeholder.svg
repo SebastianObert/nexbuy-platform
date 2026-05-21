@@ -1,0 +1,7 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" rx="8" fill="#22232B"/>
+  <rect x="140" y="140" width="120" height="120" rx="8" stroke="#2D2E36" stroke-width="2" fill="none"/>
+  <path d="M170 200L190 220L210 180L240 230" stroke="#2D2E36" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="190" cy="180" r="8" fill="#2D2E36"/>
+  <text x="200" y="280" text-anchor="middle" fill="#9CA3AF" font-family="system-ui" font-size="14">Product Image</text>
+</svg>
