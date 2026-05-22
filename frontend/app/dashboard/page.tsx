@@ -9,7 +9,7 @@ export default function CollectorDashboardPage() {
         <div className="flex justify-between items-center w-full max-w-container-max mx-auto px-margin-desktop h-20">
           <div className="font-headline-sm text-headline-sm tracking-tighter text-primary uppercase">Nexbuy</div>
           <div className="hidden md:flex items-center gap-stack-lg">
-            <Link href="/"   className="font-headline-sm text-headline-sm text-on-surface-variant hover:text-primary transition-all">Beranda</Link>
+            <Link href="/home" className="font-headline-sm text-headline-sm text-on-surface-variant hover:text-primary transition-all">Beranda</Link>
             <a href="#"      className="font-headline-sm text-headline-sm text-primary font-bold border-b-2 border-primary pb-1">Koleksi</a>
             <a href="#"      className="font-headline-sm text-headline-sm text-on-surface-variant hover:text-primary transition-all">Pesanan</a>
             <a href="#"      className="font-headline-sm text-headline-sm text-on-surface-variant hover:text-primary transition-all">Wishlist</a>
@@ -54,15 +54,16 @@ export default function CollectorDashboardPage() {
         <section className="mb-section-gap">
           <div className="flex justify-between items-center mb-stack-lg">
             <h2 className="font-headline-sm text-headline-sm text-on-surface uppercase">Group Buy Aktif</h2>
-            <Link href="/" className="font-label-mono text-label-mono text-primary hover:underline uppercase">
+            <Link href="/home" className="font-label-mono text-label-mono text-primary hover:underline uppercase">
               Jelajahi Semua →
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {products.slice(0, 6).map((p) => (
+            {products.slice(0, 8).map((p) => (
               <div key={p.id} className="glass-panel rounded-xl border border-surface-stroke hover:border-primary transition-all duration-500 overflow-hidden group">
-                <div className="relative aspect-video bg-surface-container-high flex items-center justify-center">
-                  <span className="material-symbols-outlined text-6xl text-surface-container-highest">keyboard</span>
+                <div className="relative aspect-video bg-surface-container-high flex items-center justify-center overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute top-3 right-3">
                     <span className="font-label-mono text-[10px] bg-primary text-on-primary px-3 py-1 rounded-full pulse-chip">
                       LIVE GB

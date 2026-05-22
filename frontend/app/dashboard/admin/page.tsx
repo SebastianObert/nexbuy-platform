@@ -92,7 +92,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center w-full max-w-container-max mx-auto px-margin-desktop h-20">
           <div className="font-headline-sm text-headline-sm tracking-tighter text-primary uppercase">Nexbuy</div>
           <div className="hidden md:flex items-center gap-stack-lg">
-            <Link href="/" className="font-headline-sm text-headline-sm text-on-surface-variant hover:text-primary transition-all">Beranda</Link>
+            <Link href="/home" className="font-headline-sm text-headline-sm text-on-surface-variant hover:text-primary transition-all">Beranda</Link>
             <a href="#"    className="font-headline-sm text-headline-sm text-primary font-bold border-b-2 border-primary pb-1">Admin</a>
           </div>
           <div className="flex items-center gap-stack-md">

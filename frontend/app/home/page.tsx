@@ -13,7 +13,7 @@ const PRODUCTS = [
     badgeColor: "bg-primary text-on-primary",
     aiColor: "text-primary border-primary/30",
     progressWidth: "w-full",
-    img: "https://lh3.googleusercontent.com/aida/ADBb0ujZeWrmWqhDRgqISStsQ0O7EWjJ8PgsxUJuwl83Y8NJ7nTgnLCXChb_UCXaLQCf-HPIXfA9UDY4YuuzJUaUsTCfB10mlV6ooIJLrVBcVxR4xeM_gp6p6_1WlO0ll7nMb9QuV98HiKLgSE7I21MPZrXmANNflZPWCsoosi9qhXJO_o80ysKJOJ5arIWDf-Xfbdf_CHW6_5Kaf6dZpzq6upPmn8PQxCxEkmk8-MTjG3tjku48ksOecF3f8yc",
+    img: "/images/product-case.jpg",
     fundedColor: "text-primary",
     hoverBorder: "hover:border-primary",
   },
@@ -29,7 +29,7 @@ const PRODUCTS = [
     badgeColor: "",
     aiColor: "text-on-surface-variant",
     progressWidth: "w-[68%]",
-    img: "https://lh3.googleusercontent.com/aida/ADBb0uitGyazE-C3PRk2ayOj0Ygoxl6-_9AuPcrSBYnzzcMMQk4p-6CPOorxri-tE0LJ-gwhddJ-_niOI7Fhuee50mIyFnsvDHPdTjR4OLiqFHb7qlJdaYtUApUEQmMayXQVC5E4SkAxK6Co9Pgmou4lH-Sh4rovExqnogefAQn3lpYWMd3nzUYLSimRCD4jcwwfoiw1n2HgXK0prTK_QtHcbLgv1oqfCAIuKnvWUQSaUe5PnuP_z2KC0TGo9ArS",
+    img: "/images/product-keycap.png",
     fundedColor: "text-on-surface",
     hoverBorder: "hover:border-secondary",
   },
@@ -45,7 +45,7 @@ const PRODUCTS = [
     badgeColor: "bg-secondary-container text-on-secondary-container",
     aiColor: "text-primary border-primary/30",
     progressWidth: "w-[95%]",
-    img: "https://lh3.googleusercontent.com/aida/ADBb0uiwIy3T6l_uiseG6r_hpKunjZObX9plTErV71WvfYpgbq4PSILzT7QJXTymHliNRFsDj5Fybv1we5rkc0r0aRW8rEyTZEcF8RTRfarZR8RL9yvmUQQpLiKbF7uWp3i6AlINdw5mlKCWOcm8YEoPhSKTHuD03SI9woLa0vYj3G5SwCNQoQ6wxhlQRqmfkz7hs4vhe_PcCM1mc66srmy4ttc6sDGDXTRqFr7e4vP0jI5LOXDNwuoTLx1OzNE",
+    img: "/images/product-figure.png",
     fundedColor: "text-primary",
     hoverBorder: "hover:border-primary",
   },
@@ -61,7 +61,7 @@ const PRODUCTS = [
     badgeColor: "",
     aiColor: "text-on-surface-variant",
     progressWidth: "w-[53%]",
-    img: "https://lh3.googleusercontent.com/aida/ADBb0uhIg5COrtWexOOEp92weJTm-UjH7hikDOPgBNa9tWDB7LwpnJx3Xtd5jG9DvjBfnd--7oRXihxL7TGoX00vOeUO_gUqkh4O94pU03xYgwxP51R8fpUCks54_Btdhol04QOFOc_AjERxdCLF1DlnPw-R3GGkRbw99_F8KdoIKkZpkRn8MyhYZ9daScgkg9bGI843qDefJvg8dbkMyK2KMxkZXHlf4kjpHvJKy-Yu4Ro3hQ7YdmUFfvKg3Xa4",
+    img: "/images/product-case.jpg",
     fundedColor: "text-on-surface",
     hoverBorder: "hover:border-primary",
   },
@@ -108,7 +108,7 @@ export default function HomePage() {
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-r from-deep-void via-deep-void/60 to-transparent z-10" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt="Aurora R2 Keyboard" className="w-full h-full object-cover grayscale-[0.2] contrast-[1.1]" src={PRODUCTS[0].img} />
+            <img alt="Aurora R2 Keyboard" className="w-full h-full object-cover grayscale-[0.2] contrast-[1.1]" src="/images/hero-keyboard.jpg" />
           </div>
           <div className="relative z-20 max-w-container-max mx-auto px-margin-desktop w-full">
             <div className="max-w-2xl">

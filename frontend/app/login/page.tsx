@@ -76,7 +76,7 @@ export default function LoginPage() {
       {/* Header */}
       <header className="bg-deep-void/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-surface-stroke shadow-[0_0_15px_rgba(34,211,238,0.1)]">
         <div className="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 max-w-container-max mx-auto">
-          <Link href="/" className="font-headline-md text-headline-md font-bold text-neon-cyan tracking-tighter">
+          <Link href="/home" className="font-headline-md text-headline-md font-bold text-neon-cyan tracking-tighter">
             NEXBUY
           </Link>
           <div className="flex items-center gap-stack-md">
