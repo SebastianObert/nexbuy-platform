@@ -66,7 +66,7 @@ export default function LoginPage() {
     e.preventDefault()
     if (!selectedRole) return
     localStorage.setItem("nexbuy_role", selectedRole)
-    if (selectedRole === "Kolektor") router.push("/dashboard")
+    if (selectedRole === "Kolektor") router.push("/home")
     else if (selectedRole === "Kreator") router.push("/dashboard/creator")
     else router.push("/dashboard/admin")
   }

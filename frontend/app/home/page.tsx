@@ -3,6 +3,7 @@ import Link from "next/link"
 const PRODUCTS = [
   {
     id: "aurora-r2",
+    detailId: "neo65-aluminum",
     name: "Aurora R2",
     creator: "Studio Kanvas",
     price: "Rp 4.2M",
@@ -19,6 +20,7 @@ const PRODUCTS = [
   },
   {
     id: "oceanus-set",
+    detailId: "resin-oni-keycap",
     name: "Oceanus Set",
     creator: "Resin Lab",
     price: "Rp 850K",
@@ -35,6 +37,7 @@ const PRODUCTS = [
   },
   {
     id: "specter-v3",
+    detailId: "eva-unit-01",
     name: "Specter v3",
     creator: "Mono Toys",
     price: "Rp 1.4M",
@@ -51,6 +54,7 @@ const PRODUCTS = [
   },
   {
     id: "teal75",
+    detailId: "gmk-eclipse",
     name: "Teal75 Alum",
     creator: "Forge & Co",
     price: "Rp 6.8M",
@@ -120,7 +124,7 @@ export default function HomePage() {
                 Dirancang untuk kaum elit. Aurora R2 menggabungkan gasket-mounted acoustics dengan sasis monolitik CNC-machined.
               </p>
               <div className="flex gap-stack-md">
-                <Link href="/login" className="bg-primary hover:bg-primary-container text-on-primary font-headline-sm text-headline-sm px-8 py-4 rounded-lg transition-all flex items-center gap-2">
+                <Link href="/dashboard/products/neo65-aluminum" className="bg-primary hover:bg-primary-container text-on-primary font-headline-sm text-headline-sm px-8 py-4 rounded-lg transition-all flex items-center gap-2">
                   <span>Join Group Buy</span><span className="material-symbols-outlined">bolt</span>
                 </Link>
                 <button className="border border-surface-stroke hover:bg-surface-variant/30 text-on-surface font-headline-sm text-headline-sm px-8 py-4 rounded-lg transition-all">Spek Teknis</button>
@@ -144,7 +148,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
             {PRODUCTS.map((p) => (
-              <Link href="/login" key={p.id} className={`group relative bg-surface-container rounded-xl border border-surface-stroke overflow-hidden ${p.hoverBorder} transition-all duration-500 primary-glow`}>
+              <Link href={`/dashboard/products/${p.detailId}`} key={p.id} className={`group relative bg-surface-container rounded-xl border border-surface-stroke overflow-hidden ${p.hoverBorder} transition-all duration-500 primary-glow`}>
                 <div className="relative aspect-square overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={p.name} src={p.img} />

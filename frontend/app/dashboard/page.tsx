@@ -100,9 +100,12 @@ export default function CollectorDashboardPage() {
                       />
                     </div>
                   </div>
-                  <button className="mt-stack-md w-full bg-primary/10 border border-primary/30 text-primary font-label-mono text-label-mono py-3 hover:bg-primary hover:text-on-primary transition-all">
+                  <Link
+                    href={`/dashboard/products/${p.id}`}
+                    className="block text-center mt-stack-md w-full bg-primary/10 border border-primary/30 text-primary font-label-mono text-label-mono py-3 hover:bg-primary hover:text-on-primary transition-all"
+                  >
                     JOIN GROUP BUY
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}

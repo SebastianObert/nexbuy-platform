@@ -16,11 +16,30 @@ export interface Product {
   trustScore: number
   status: ProductStatus
   variants?: ProductVariant[]
+  gallery?: string[]
+  specifications?: ProductSpecification[]
+  includes?: string[]
+  timeline?: ProductTimelineItem[]
+  estimatedShipping?: string
+  availableSlots?: number
+  aiInsight?: string
+  riskLevel?: "low" | "medium" | "high"
 }
 
 export interface ProductVariant {
   name: string
   options: string[]
+}
+
+export interface ProductSpecification {
+  label: string
+  value: string
+}
+
+export interface ProductTimelineItem {
+  label: string
+  date: string
+  status: "completed" | "active" | "upcoming"
 }
 
 export type DashboardRole = "collector" | "creator" | "admin"
