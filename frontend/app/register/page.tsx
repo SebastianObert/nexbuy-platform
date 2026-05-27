@@ -31,34 +31,34 @@ const ROLES: { role: Role; label: string; desc: string; icon: string; color: str
   },
 ]
 
-const FLOATING_PRODUCTS = [
-  { name: "Neo65 Aluminum Kit", price: "Rp 4.2M", progress: 78, emoji: "⌨️", rotate: "-6deg", top: "8%",  left: "4%",  delay: "0s"    },
-  { name: "GMK Eclipse Keycaps", price: "Rp 850K", progress: 68, emoji: "🎹", rotate: "5deg",  top: "55%", left: "2%",  delay: "0.15s" },
-  { name: "EVA Unit-01 Figure",  price: "Rp 2.1M", progress: 95, emoji: "🤖", rotate: "-4deg", top: "30%", right: "3%", delay: "0.25s" },
-  { name: "Resin Oni Artisan",   price: "Rp 680K", progress: 90, emoji: "🎭", rotate: "6deg",  top: "70%", right: "2%", delay: "0.4s"  },
+const STATS = [
+  { value: "48K+",   label: "Kolektor Bergabung" },
+  { value: "1,200+", label: "Campaign Aktif"      },
+  { value: "Free",   label: "Daftar Gratis"       },
 ]
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null)
-  const [email, setEmail] = useState("")
+  const [name, setName]         = useState("")
+  const [email, setEmail]       = useState("")
   const [password, setPassword] = useState("")
+  const [confirm, setConfirm]   = useState("")
   const [showPass, setShowPass] = useState(false)
-  const [remember, setRemember] = useState(false)
+  const [agree, setAgree]       = useState(false)
   const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!selectedRole) return
-    localStorage.setItem("nexbuy_role", selectedRole)
-    if (selectedRole === "Kolektor") router.push("/home")
-    else if (selectedRole === "Kreator") router.push("/dashboard/creator")
-    else router.push("/dashboard/admin")
+    if (!selectedRole || !agree) return
+    router.push("/login")
   }
+
+  const canSubmit = selectedRole && agree && name && email && password && confirm && password === confirm
 
   return (
     <div className="min-h-screen flex" style={{ background: "var(--nb-bg)" }}>
 
-      {/* ── LEFT PANEL — visual showcase ─────────────────────────── */}
+      {/* ── LEFT PANEL ─────────────────────────────────────────── */}
       <div
         className="hidden lg:flex flex-col flex-1 relative overflow-hidden"
         style={{
@@ -68,46 +68,11 @@ export default function LoginPage() {
       >
         {/* Ambient blobs */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div
-            className="absolute w-[500px] h-[500px] rounded-full blur-[120px] opacity-25"
-            style={{ background: "var(--nb-primary)", top: "-10%", left: "-10%" }}
-          />
-          <div
-            className="absolute w-[400px] h-[400px] rounded-full blur-[100px] opacity-15"
-            style={{ background: "var(--nb-secondary)", bottom: "0%", right: "-5%" }}
-          />
+          <div className="absolute w-[500px] h-[500px] rounded-full blur-[120px] opacity-20"
+            style={{ background: "var(--nb-secondary)", top: "-10%", right: "-10%" }} />
+          <div className="absolute w-[400px] h-[400px] rounded-full blur-[100px] opacity-15"
+            style={{ background: "var(--nb-primary)", bottom: "0%", left: "-5%" }} />
         </div>
-
-        {/* Floating product cards */}
-        {FLOATING_PRODUCTS.map((p) => (
-          <div
-            key={p.name}
-            className="absolute nb-glass nb-animate-fade-in"
-            style={{
-              top: p.top,
-              left: ("left" in p) ? p.left : undefined,
-              right: ("right" in p) ? p.right : undefined,
-              transform: `rotate(${p.rotate})`,
-              borderRadius: 14,
-              padding: "14px 16px",
-              width: 200,
-              boxShadow: "var(--nb-shadow-card)",
-              animationDelay: p.delay,
-            }}
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-2xl">{p.emoji}</span>
-              <div>
-                <p className="text-xs font-semibold" style={{ color: "var(--nb-text)" }}>{p.name}</p>
-                <p className="text-xs font-bold" style={{ color: "var(--nb-primary)" }}>{p.price}</p>
-              </div>
-            </div>
-            <div className="nb-progress-track h-1.5 w-full">
-              <div className="nb-progress-fill h-1.5" style={{ width: `${p.progress}%` }} />
-            </div>
-            <p className="text-[10px] mt-1" style={{ color: "var(--nb-text-dim)" }}>{p.progress}% of MOQ</p>
-          </div>
-        ))}
 
         {/* Center branding */}
         <div className="flex-1 flex flex-col items-center justify-center px-12 relative z-10">
@@ -115,23 +80,30 @@ export default function LoginPage() {
             <div
               className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 text-white font-bold text-2xl"
               style={{ background: "linear-gradient(135deg, var(--nb-primary), var(--nb-secondary))" }}
-            >
-              N
-            </div>
-            <h1 className="nb-h1 mb-3" style={{ color: "var(--nb-text)" }}>NexBuy</h1>
+            >N</div>
+            <h1 className="nb-h1 mb-3" style={{ color: "var(--nb-text)" }}>Bergabung NexBuy</h1>
             <p className="text-base max-w-xs mx-auto" style={{ color: "var(--nb-text-sub)" }}>
-              Platform group buy eksklusif untuk komunitas kolektor hobby premium
+              Komunitas group buy premium untuk kolektor & kreator hobby terbaik Indonesia
             </p>
 
-            <div className="flex items-center justify-center gap-8 mt-10">
+            <div className="grid grid-cols-3 gap-6 mt-10">
+              {STATS.map((s) => (
+                <div key={s.label} className="nb-glass rounded-2xl p-5 text-center">
+                  <p className="nb-h3 nb-gradient-text mb-1">{s.value}</p>
+                  <p className="text-xs" style={{ color: "var(--nb-text-dim)" }}>{s.label}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-10 space-y-3 text-left max-w-xs mx-auto">
               {[
-                { value: "1,200+", label: "Campaign Aktif" },
-                { value: "48K+", label: "Kolektor" },
-                { value: "Rp 2.4M", label: "Rata-rata Hemat" },
-              ].map((s) => (
-                <div key={s.label} className="text-center">
-                  <p className="nb-h3 nb-gradient-text">{s.value}</p>
-                  <p className="text-xs mt-0.5" style={{ color: "var(--nb-text-dim)" }}>{s.label}</p>
+                { icon: "🔒", text: "Dana aman dengan sistem escrow terverifikasi" },
+                { icon: "🤖", text: "AI Score prediksi keberhasilan setiap campaign" },
+                { icon: "⭐", text: "Hanya kreator terverifikasi yang bisa listing" },
+              ].map((item) => (
+                <div key={item.text} className="flex items-start gap-3">
+                  <span className="text-lg">{item.icon}</span>
+                  <p className="text-sm" style={{ color: "var(--nb-text-sub)" }}>{item.text}</p>
                 </div>
               ))}
             </div>
@@ -146,8 +118,8 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ── RIGHT PANEL — form ───────────────────────────────────── */}
-      <div className="flex flex-col w-full lg:w-[460px] xl:w-[520px] min-h-screen">
+      {/* ── RIGHT PANEL — form ──────────────────────────────────── */}
+      <div className="flex flex-col w-full lg:w-[480px] xl:w-[540px] min-h-screen overflow-y-auto">
 
         {/* Header */}
         <div className="flex items-center justify-between px-8 pt-7 pb-4">
@@ -165,14 +137,34 @@ export default function LoginPage() {
         <div className="flex-1 flex flex-col justify-center px-8 py-6">
           <div className="max-w-sm w-full mx-auto nb-animate-scale-in">
 
-            <div className="mb-8">
-              <h2 className="nb-h2 mb-1" style={{ color: "var(--nb-text)" }}>Selamat datang kembali</h2>
+            <div className="mb-7">
+              <h2 className="nb-h2 mb-1" style={{ color: "var(--nb-text)" }}>Buat akun baru</h2>
               <p className="text-sm" style={{ color: "var(--nb-text-sub)" }}>
-                Masuk ke akun NexBuy-mu untuk melanjutkan
+                Daftar gratis dan mulai perjalanan koleksimu
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+
+              {/* Full name */}
+              <div>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: "var(--nb-text-sub)" }}>
+                  Nama Lengkap
+                </label>
+                <div className="relative">
+                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: "var(--nb-text-dim)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                  </div>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Nama kamu"
+                    className="nb-input w-full h-11 pl-10 pr-4 text-sm"
+                    required
+                  />
+                </div>
+              </div>
 
               {/* Email */}
               <div>
@@ -189,6 +181,7 @@ export default function LoginPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="email@example.com"
                     className="nb-input w-full h-11 pl-10 pr-4 text-sm"
+                    required
                   />
                 </div>
               </div>
@@ -206,15 +199,13 @@ export default function LoginPage() {
                     type={showPass ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
+                    placeholder="Min. 8 karakter"
                     className="nb-input w-full h-11 pl-10 pr-11 text-sm"
+                    required
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPass(!showPass)}
+                  <button type="button" onClick={() => setShowPass(!showPass)}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
-                    style={{ color: "var(--nb-text-dim)" }}
-                  >
+                    style={{ color: "var(--nb-text-dim)" }}>
                     {showPass ? (
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                     ) : (
@@ -224,26 +215,33 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Remember + Forgot */}
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={remember}
-                    onChange={(e) => setRemember(e.target.checked)}
-                    className="w-4 h-4 rounded accent-[var(--nb-primary)]"
-                  />
-                  <span className="text-xs" style={{ color: "var(--nb-text-sub)" }}>Ingat saya</span>
+              {/* Confirm password */}
+              <div>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: "var(--nb-text-sub)" }}>
+                  Konfirmasi Password
                 </label>
-                <a href="#" className="text-xs font-medium transition-colors hover:underline" style={{ color: "var(--nb-primary)" }}>
-                  Lupa password?
-                </a>
+                <div className="relative">
+                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: "var(--nb-text-dim)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 12l2 2 4-4"/><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </div>
+                  <input
+                    type={showPass ? "text" : "password"}
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    placeholder="Ulangi password"
+                    className="nb-input w-full h-11 pl-10 pr-4 text-sm"
+                    required
+                  />
+                </div>
+                {confirm && password !== confirm && (
+                  <p className="text-xs mt-1" style={{ color: "var(--nb-red)" }}>Password tidak cocok</p>
+                )}
               </div>
 
               {/* Role Selector */}
               <div>
                 <p className="text-xs font-semibold mb-2.5" style={{ color: "var(--nb-text-sub)" }}>
-                  Masuk sebagai
+                  Daftar sebagai
                 </p>
                 <div className="grid grid-cols-3 gap-2">
                   {ROLES.map(({ role, label, desc, icon, color }) => {
@@ -273,20 +271,37 @@ export default function LoginPage() {
                 </div>
               </div>
 
+              {/* Terms agree */}
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agree}
+                  onChange={(e) => setAgree(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 rounded accent-[var(--nb-primary)]"
+                />
+                <span className="text-xs leading-relaxed" style={{ color: "var(--nb-text-sub)" }}>
+                  Saya menyetujui{" "}
+                  <a href="#" className="font-semibold hover:underline" style={{ color: "var(--nb-primary)" }}>Syarat & Ketentuan</a>
+                  {" "}dan{" "}
+                  <a href="#" className="font-semibold hover:underline" style={{ color: "var(--nb-primary)" }}>Kebijakan Privasi</a>{" "}
+                  NexBuy
+                </span>
+              </label>
+
               {/* Submit */}
               <button
                 type="submit"
-                disabled={!selectedRole}
-                className="nb-btn-primary w-full h-11 text-sm font-semibold mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                disabled={!canSubmit}
+                className="nb-btn-primary w-full h-11 text-sm font-semibold mt-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {selectedRole ? `Masuk sebagai ${selectedRole}` : "Pilih role terlebih dahulu"}
+                {selectedRole ? `Daftar sebagai ${selectedRole}` : "Pilih role terlebih dahulu"}
               </button>
 
-              {/* Register link */}
+              {/* Login link */}
               <p className="text-center text-sm" style={{ color: "var(--nb-text-sub)" }}>
-                Belum punya akun?{" "}
-                <Link href="/register" className="font-semibold transition-colors hover:underline" style={{ color: "var(--nb-primary)" }}>
-                  Daftar sekarang
+                Sudah punya akun?{" "}
+                <Link href="/login" className="font-semibold transition-colors hover:underline" style={{ color: "var(--nb-primary)" }}>
+                  Masuk sekarang
                 </Link>
               </p>
             </form>
